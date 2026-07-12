@@ -2,6 +2,16 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AcademicYearController;
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::view('/dashboard', 'admin.dashboard.index')
+        ->name('dashboard');
+
+    Route::resource('academic-years', AcademicYearController::class);
+
+});
 
 Route::middleware(['auth'])->group(function () {
 
