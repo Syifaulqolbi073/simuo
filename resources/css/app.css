@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ========================================
+   SIMUO THEME
+   MTs Al Fattah Juwana
+======================================== */
+
+@layer base {
+
+    body{
+        @apply bg-slate-100 text-slate-800;
+    }
+
+    h1{
+        @apply text-3xl font-bold;
+    }
+
+    h2{
+        @apply text-2xl font-semibold;
+    }
+
+    h3{
+        @apply text-xl font-semibold;
+    }
+
+}
+
+@layer components{
+
+    .simuo-card{
+        @apply bg-white rounded-2xl shadow-md p-6 border border-slate-200;
+    }
+
+    .simuo-card-hover{
+        @apply transition duration-300 hover:shadow-xl hover:-translate-y-1;
+    }
+
+    .simuo-btn{
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition;
+    }
+
+    .simuo-btn-primary{
+        @apply simuo-btn bg-green-700 text-white hover:bg-green-800;
+    }
+
+    .simuo-btn-secondary{
+        @apply simuo-btn bg-slate-700 text-white hover:bg-slate-800;
+    }
+
+    .simuo-btn-danger{
+        @apply simuo-btn bg-red-600 text-white hover:bg-red-700;
+    }
+
+    .simuo-input{
+        @apply w-full rounded-xl border border-slate-300 px-4 py-2 focus:border-green-600 focus:ring-green-600;
+    }
+
+}
