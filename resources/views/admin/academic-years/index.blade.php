@@ -1,85 +1,194 @@
 @extends('layouts.app')
 
+@section('title', 'Tahun Pelajaran')
+
 @section('content')
 
-<div class="max-w-7xl mx-auto">
+<div class="space-y-6">
 
-    <div class="flex items-center justify-between mb-6">
+    {{-- Header --}}
+    <div class="flex items-center justify-between">
+
         <div>
-            <h1 class="text-2xl font-bold">Tahun Pelajaran</h1>
-            <p class="text-gray-500">Daftar Tahun Pelajaran</p>
+            <h1 class="text-2xl font-bold text-slate-800">
+                Tahun Pelajaran
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Kelola data Tahun Pelajaran MTs Al Fattah Juwana
+            </p>
         </div>
 
-        <a href="{{ route('academic-years.create') }}"
-           class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg">
-            + Tambah
+        <a href="{{ route('academic-years.create') }}">
+            <x-ui.button>
+                + Tambah Tahun Pelajaran
+            </x-ui.button>
         </a>
+
     </div>
 
+    {{-- Flash Message --}}
     @if(session('success'))
-        <div class="mb-4 rounded-lg bg-green-100 border border-green-300 text-green-800 px-4 py-3">
+        <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-700">
             {{ session('success') }}
         </div>
     @endif
 
-    <div class="bg-white rounded-xl shadow">
+    {{-- Card --}}
+    <x-ui.card>
 
-        <table class="min-w-full">
+        <div class="border-b border-slate-200 p-5">
 
-            <thead class="bg-slate-100">
+            <form action="{{ route('academic-years.index') }}" method="GET">
+
+                <div class="flex gap-3">
+
+                    <x-ui.input
+                        type="text"
+                        name="search"
+                        :value="request('search')"
+                        placeholder="Cari kode atau nama tahun pelajaran..." />
+
+                    <x-ui.button type="secondary">
+                        Cari
+                    </x-ui.button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <x-ui.table>
+
+            <thead class="bg-slate-50">
 
                 <tr>
 
-                    <th class="px-4 py-3 text-left">Kode</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                        No
+                    </th>
 
-                    <th class="px-4 py-3 text-left">Nama</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                        Kode
+                    </th>
 
-                    <th class="px-4 py-3 text-left">Mulai</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                        Nama
+                    </th>
 
-                    <th class="px-4 py-3 text-left">Selesai</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                        Periode
+                    </th>
 
-                    <th class="px-4 py-3 text-center">Status</th>
+                    <th class="px-6 py-4 text-center text-sm font-semibold text-slate-600">
+                        Status
+                    </th>
 
-                    <th class="px-4 py-3 text-center">Aksi</th>
+                    <th class="px-6 py-4 text-center text-sm font-semibold text-slate-600">
+                        Aksi
+                    </th>
 
                 </tr>
 
             </thead>
 
-            <tbody>
+            <tbody class="divide-y divide-slate-200">
 
             @forelse($academicYears as $academicYear)
 
-                <tr class="border-t">
+                <tr class="hover:bg-slate-50">
 
-                    <td class="px-4 py-3">{{ $academicYear->code }}</td>
+                    <td class="px-6 py-4">
+                        {{ $loop->iteration + ($academicYears->firstItem() ?? 0) - 1 }}
+                    </td>
 
-                    <td class="px-4 py-3">{{ $academicYear->name }}</td>
+                    <td class="px-6 py-4 font-medium">
+                        {{ $academicYear->code }}
+                    </td>
 
-                    <td class="px-4 py-3">{{ $academicYear->start_date->format('d-m-Y') }}</td>
+                    <td class="px-6 py-4">
+                        {{ $academicYear->name }}
+                    </td>
 
-                    <td class="px-4 py-3">{{ $academicYear->end_date->format('d-m-Y') }}</td>
+                    <td class="px-6 py-4">
+                        {{ $academicYear->start_date->format('d M Y') }}
+                        -
+                        {{ $academicYear->end_date->format('d M Y') }}
+                    </td>
 
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-6 py-4 text-center">
 
                         @if($academicYear->is_active)
-                            <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-sm">
+
+                            <x-ui.badge type="success">
                                 Aktif
-                            </span>
+                            </x-ui.badge>
+
                         @else
-                            <span class="px-2 py-1 rounded bg-gray-100 text-gray-700 text-sm">
+
+                            <x-ui.badge type="default">
                                 Nonaktif
-                            </span>
+                            </x-ui.badge>
+
                         @endif
 
                     </td>
 
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-6 py-4">
 
-                        <a href="{{ route('academic-years.edit',$academicYear) }}"
-                           class="text-blue-600 hover:underline">
-                            Edit
-                        </a>
+                        <div class="flex justify-center gap-2">
+
+                            @unless($academicYear->is_active)
+
+                                <form
+                                    action="{{ route('academic-years.activate',$academicYear) }}"
+                                    method="POST">
+
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <x-ui.button
+                                        type="secondary"
+                                        type="submit">
+
+                                        Aktifkan
+
+                                    </x-ui.button>
+
+                                </form>
+
+                            @endunless
+
+                            <a href="{{ route('academic-years.edit',$academicYear) }}">
+
+                                <x-ui.button type="primary">
+
+                                    Edit
+
+                                </x-ui.button>
+
+                            </a>
+
+                            <form
+                                action="{{ route('academic-years.destroy',$academicYear) }}"
+                                method="POST"
+                                onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <x-ui.button
+                                    type="danger"
+                                    type="submit">
+
+                                    Hapus
+
+                                </x-ui.button>
+
+                            </form>
+
+                        </div>
 
                     </td>
 
@@ -89,8 +198,10 @@
 
                 <tr>
 
-                    <td colspan="6" class="text-center py-8 text-gray-500">
+                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+
                         Belum ada data Tahun Pelajaran.
+
                     </td>
 
                 </tr>
@@ -99,15 +210,15 @@
 
             </tbody>
 
-        </table>
+        </x-ui.table>
 
-    </div>
+        <div class="border-t border-slate-200 p-5">
 
-    <div class="mt-5">
+            {{ $academicYears->links() }}
 
-        {{ $academicYears->links() }}
+        </div>
 
-    </div>
+    </x-ui.card>
 
 </div>
 

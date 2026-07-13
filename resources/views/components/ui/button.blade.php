@@ -1,21 +1,18 @@
 @props([
-    'color' => 'primary',
-    'type' => 'button'
+    'type' => 'primary',
 ])
 
 @php
-$colors = [
-    'primary' => 'bg-green-600 hover:bg-green-700 text-white',
-    'secondary' => 'bg-slate-600 hover:bg-slate-700 text-white',
+$classes = match($type) {
+    'primary' => 'bg-emerald-600 hover:bg-emerald-700 text-white',
+    'secondary' => 'bg-slate-200 hover:bg-slate-300 text-slate-800',
     'danger' => 'bg-red-600 hover:bg-red-700 text-white',
-    'warning' => 'bg-yellow-500 hover:bg-yellow-600 text-white',
-];
+    default => 'bg-emerald-600 hover:bg-emerald-700 text-white',
+};
 @endphp
 
-<button
-    type="{{ $type }}"
-    {{ $attributes->merge([
-        'class' => 'px-4 py-2 rounded-xl font-medium transition '.$colors[$color]
-    ]) }}>
+<button {{ $attributes->merge([
+'class'=>"inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold transition {$classes}"
+]) }}>
     {{ $slot }}
 </button>

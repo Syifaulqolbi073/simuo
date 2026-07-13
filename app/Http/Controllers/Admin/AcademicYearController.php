@@ -14,18 +14,23 @@ class AcademicYearController extends Controller
 {
     public function index(Request $request): View
     {
-        $search = $request->get('search');
+        $search = $request->string('search')->toString();
 
         $academicYears = AcademicYear::query()
             ->when($search, function ($query) use ($search) {
-                $query->where('code', 'like', "%{$search}%")
+                $query->where(function ($q) use ($search) {
+                    $q->where('code', 'like', "%{$search}%")
                       ->orWhere('name', 'like', "%{$search}%");
+                });
             })
-            ->orderByDesc('start_date')
+            ->latest('start_date')
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.academic-years.index', compact('academicYears', 'search'));
+        return view('admin.academic-years.index', compact(
+            'academicYears',
+            'search'
+        ));
     }
 
     public function create(): View
@@ -36,6 +41,8 @@ class AcademicYearController extends Controller
     public function store(AcademicYearStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
+
+        $data['is_active'] = $request->boolean('is_active');
 
         if ($data['is_active']) {
             AcademicYear::query()->update([
@@ -62,6 +69,8 @@ class AcademicYearController extends Controller
 
         $data = $request->validated();
 
+        $data['is_active'] = $request->boolean('is_active');
+
         if ($data['is_active']) {
             AcademicYear::query()->update([
                 'is_active' => false,
@@ -77,10 +86,31 @@ class AcademicYearController extends Controller
 
     public function destroy(AcademicYear $academicYear): RedirectResponse
     {
+        if ($academicYear->is_active) {
+            return redirect()
+                ->route('academic-years.index')
+                ->with('error', 'Tahun pelajaran aktif tidak dapat dihapus.');
+        }
+
         $academicYear->delete();
 
         return redirect()
             ->route('academic-years.index')
             ->with('success', 'Tahun pelajaran berhasil dihapus.');
+    }
+
+    public function activate(AcademicYear $academicYear): RedirectResponse
+    {
+        AcademicYear::query()->update([
+            'is_active' => false,
+        ]);
+
+        $academicYear->update([
+            'is_active' => true,
+        ]);
+
+        return redirect()
+            ->route('academic-years.index')
+            ->with('success', 'Tahun pelajaran berhasil diaktifkan.');
     }
 }

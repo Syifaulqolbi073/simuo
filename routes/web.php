@@ -10,6 +10,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     Route::resource('academic-years', AcademicYearController::class);
+    Route::patch(
+    'academic-years/{academicYear}/activate',
+    [AcademicYearController::class, 'activate']
+)->name('academic-years.activate');
 
 });
 
