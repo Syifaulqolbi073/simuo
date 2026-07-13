@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="grid grid-cols-4 gap-6">
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
 
     <x-ui.stat-card
         title="Guru"

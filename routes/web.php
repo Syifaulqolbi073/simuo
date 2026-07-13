@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AcademicYearController;
+use App\Http\Controllers\Admin\SemesterController;
 
 Route::middleware(['auth'])->group(function () {
 
@@ -14,6 +15,11 @@ Route::middleware(['auth'])->group(function () {
     'academic-years/{academicYear}/activate',
     [AcademicYearController::class, 'activate']
 )->name('academic-years.activate');
+Route::resource('semesters', \App\Http\Controllers\Admin\SemesterController::class);
+Route::patch(
+    'semesters/{semester}/activate',
+    [SemesterController::class, 'activate']
+)->name('semesters.activate');
 
 });
 

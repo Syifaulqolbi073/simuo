@@ -4,26 +4,48 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'SIMUO') }}</title>
+    <title>@yield('title','SIMUO')</title>
 
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
-<body class="bg-slate-100">
+<body class="bg-slate-100" x-data="{ sidebar:false }">
 
-<div class="flex min-h-screen">
+<div class="min-h-screen flex">
 
-    {{-- Sidebar --}}
-    <x-layout.sidebar />
+    {{-- Sidebar Desktop --}}
+    <div class="hidden lg:block">
+        <x-layout.sidebar />
+    </div>
 
-    {{-- Content --}}
-    <div class="flex-1">
+    {{-- Sidebar Mobile --}}
+    <div
+        x-show="sidebar"
+        x-transition
+        class="fixed inset-0 z-50 flex lg:hidden">
+
+        <div class="w-72">
+            <x-layout.sidebar />
+        </div>
+
+        <div
+            class="flex-1 bg-black/50"
+            @click="sidebar=false">
+        </div>
+
+    </div>
+
+    <div class="flex flex-1 flex-col">
 
         <x-layout.navbar />
 
-        <main class="p-6">
+        <main class="flex-1 p-4 lg:p-8">
 
-            @yield('content')
+            <div class="mx-auto max-w-7xl">
+
+                @yield('content')
+
+            </div>
 
         </main>
 

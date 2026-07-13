@@ -5,42 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Semester;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AcademicYear extends Model
+class Semester extends Model
 {
     use HasUlids;
     use SoftDeletes;
 
     protected $fillable = [
-
+        'academic_year_id',
         'code',
-
         'name',
-
-        'start_date',
-
-        'end_date',
-
+        'order',
         'is_active',
-
     ];
 
     protected function casts(): array
     {
         return [
-
-            'start_date'=>'date',
-
-            'end_date'=>'date',
-
-            'is_active'=>'boolean',
-
+            'order' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
-    public function semesters(): HasMany
-{
-    return $this->hasMany(Semester::class);
-}
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
 }

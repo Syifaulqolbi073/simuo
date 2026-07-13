@@ -1,47 +1,81 @@
-<nav class="sticky top-0 z-30 border-b border-slate-200 bg-white">
+<nav class="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white shadow-sm">
 
-    <div class="flex h-16 items-center justify-between px-6">
+    <div class="flex h-full items-center justify-between px-4 lg:px-8">
 
-        <div>
+        {{-- Kiri --}}
+        <div class="flex items-center gap-4">
 
-            <h1 class="text-xl font-bold text-slate-800">
-                @yield('title','Dashboard')
-            </h1>
+            {{-- Hamburger Mobile --}}
+            <button
+                @click="sidebar = true"
+                class="rounded-lg p-2 hover:bg-slate-100 lg:hidden">
 
-            <p class="text-sm text-slate-500">
-                Sistem Ujian Online MTs Al Fattah Juwana
-            </p>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h16"/>
+
+                </svg>
+
+            </button>
+
+            <div>
+
+                {{-- Breadcrumb --}}
+                <div class="text-xs text-slate-500">
+
+                    Dashboard
+
+                    @hasSection('title')
+                        <span class="mx-1">/</span>
+                        @yield('title')
+                    @endif
+
+                </div>
+
+                <div class="font-semibold text-slate-800">
+                    SIMUO
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="flex items-center gap-5">
+        {{-- Kanan --}}
+        <div class="flex items-center gap-3">
 
-            <div class="text-right">
+            <div class="hidden text-right lg:block">
 
-                <p class="text-sm font-semibold text-slate-800">
+                <div class="font-semibold text-slate-800">
                     {{ auth()->user()->name }}
-                </p>
+                </div>
 
-                <p class="text-xs text-slate-500">
+                <div class="text-xs text-slate-500">
                     Super Administrator
-                </p>
+                </div>
 
             </div>
 
             <div
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold">
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 font-bold text-white">
 
                 {{ strtoupper(substr(auth()->user()->name,0,1)) }}
 
             </div>
 
-            <form method="POST"
-                  action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}">
 
                 @csrf
 
                 <button
-                    class="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+                    type="submit"
+                    class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
 
                     Logout
 

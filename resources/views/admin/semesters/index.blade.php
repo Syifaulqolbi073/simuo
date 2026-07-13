@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tahun Pelajaran')
+@section('title', 'Semester')
 
 @section('content')
 
@@ -11,20 +11,20 @@
 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">
-                Tahun Pelajaran
+                Semester
             </h1>
 
             <p class="mt-1 text-sm text-slate-500">
-                Kelola data Tahun Pelajaran MTs Al Fattah Juwana
+                Kelola data Semester MTs Al Fattah Juwana
             </p>
             <p class="mt-1 text-xs text-slate-400">
-    Total : {{ $academicYears->total() }} Tahun Pelajaran
+   Total : {{ $semesters->total() }} Semester
 </p>
         </div>
 
-        <a href="{{ route('academic-years.create') }}">
+        <a href="{{ route('semesters.create') }}">
             <x-ui.button>
-                + Tambah Tahun Pelajaran
+                + Tambah Semester
             </x-ui.button>
         </a>
 
@@ -42,7 +42,7 @@
 
         <div class="border-b border-slate-200 p-5">
 
-            <form action="{{ route('academic-years.index') }}" method="GET">
+            <form action="{{ route('semesters.index') }}" method="GET">
 
                 
 <div class="flex flex-col gap-3 md:flex-row">
@@ -50,7 +50,7 @@
                         type="text"
                         name="search"
                         :value="request('search')"
-                        placeholder="Cari kode atau nama tahun pelajaran..." />
+                        placeholder="Cari kode atau nama semester..." />
 
                     
                         <x-ui.button
@@ -76,15 +76,15 @@
                     </th>
 
                     <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                        Tahun Pelajaran
+                    </th>
+
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
                         Kode
                     </th>
 
                     <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                        Nama
-                    </th>
-
-                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                        Periode
+                        Semester
                     </th>
 
                     <th class="px-6 py-4 text-center text-sm font-semibold text-slate-600">
@@ -101,32 +101,28 @@
 
             <tbody class="divide-y divide-slate-200">
 
-            @forelse($academicYears as $academicYear)
-
+           @forelse($semesters as $semester)
                 <tr class="hover:bg-slate-50">
 
                     <td class="px-6 py-4">
-                        {{ $loop->iteration + ($academicYears->firstItem() ?? 0) - 1 }}
+                        {{ $loop->iteration + ($semesters->firstItem() ?? 0) - 1 }}
                     </td>
 
                     <td class="px-6 py-4 font-medium">
-                        {{ $academicYear->code }}
+{{ $semester->academicYear->name }}
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ $academicYear->name }}
+{{ $semester->code }}
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ $academicYear->start_date->format('d M Y') }}
-                        -
-                        {{ $academicYear->end_date->format('d M Y') }}
+{{ $semester->name }}
                     </td>
 
                     <td class="px-6 py-4 text-center">
 
-                        @if($academicYear->is_active)
-
+                     @if($semester->is_active)
                             <x-ui.badge type="success">
                                 Aktif
                             </x-ui.badge>
@@ -145,10 +141,10 @@
 
                         <div class="flex justify-center gap-2">
 
-                            @unless($academicYear->is_active)
+                            @unless($semester->is_active)
 
                                 <form
-                                    action="{{ route('academic-years.activate',$academicYear) }}"
+                                    action="{{ route('semesters.activate',$semester) }}"
                                     method="POST">
 
                                     @csrf
@@ -166,7 +162,7 @@
 
                             @endunless
 
-                            <a href="{{ route('academic-years.edit',$academicYear) }}">
+                            <a href="{{ route('semesters.edit',$semester) }}">
 
                              <x-ui.button
     variant="primary">
@@ -177,7 +173,7 @@
                             </a>
 
                             <form
-                                action="{{ route('academic-years.destroy',$academicYear) }}"
+                                action="{{ route('semesters.destroy',$semester) }}"
                                 method="POST"
                                 onsubmit="return confirm('Yakin ingin menghapus data ini?')">
 
@@ -206,7 +202,7 @@
 
                     <td colspan="6" class="px-6 py-12 text-center text-slate-500">
 
-                        Belum ada data Tahun Pelajaran.
+                        Belum ada data Semester.
 
                     </td>
 
@@ -220,7 +216,7 @@
 
         <div class="border-t border-slate-200 p-5">
 
-            {{ $academicYears->links() }}
+            {{ $semesters->links() }}
 
         </div>
 
