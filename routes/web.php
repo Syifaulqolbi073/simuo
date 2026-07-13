@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\GradeController;
+use App\Http\Controllers\Admin\ClassroomController;
 
 Route::middleware(['auth'])->group(function () {
 
@@ -28,6 +29,9 @@ Route::patch(
     'grades/{grade}/activate',
     [GradeController::class, 'activate']
 )->name('grades.activate');
+
+Route::resource('classrooms', ClassroomController::class);
+
 
 });
 

@@ -42,24 +42,30 @@
 
         </a>
 
-        <a href="#"
-           class="mb-1 flex items-center rounded-xl px-4 py-3 text-slate-500 cursor-not-allowed">
+        <a <a href="{{ route('semesters.index') }}"
+           class="flex items-center rounded-xl px-4 py-3 transition
+           {{ request()->routeIs('semesters.*') ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:bg-slate-100' }}">
 
-            Semester
-
-        </a>
-
-        <a href="#"
-           class="mb-1 flex items-center rounded-xl px-4 py-3 text-slate-500 cursor-not-allowed">
-
-            Tingkat
+            <span>🗓️</span>
+            <span class="ml-3">Semester</span>
 
         </a>
 
-        <a href="#"
-           class="mb-1 flex items-center rounded-xl px-4 py-3 text-slate-500 cursor-not-allowed">
+        <a href="{{ route('grades.index') }}"
+           class="flex items-center rounded-xl px-4 py-3 transition
+           {{ request()->routeIs('grades.*') ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:bg-slate-100' }}">
 
-            Kelas
+            <span>🎓</span>
+            <span class="ml-3">Tingkat</span>
+
+        </a>
+
+        <a href="{{ route('classrooms.index') }}"
+           class="flex items-center rounded-xl px-4 py-3 transition
+           {{ request()->routeIs('classrooms.*') ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+
+            <span>🏫</span>
+            <span class="ml-3">Kelas</span>
 
         </a>
 

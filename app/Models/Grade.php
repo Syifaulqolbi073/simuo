@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Grade extends Model
 {
@@ -23,4 +24,8 @@ class Grade extends Model
             'is_active' => 'boolean',
         ];
     }
+    public function classrooms(): HasMany
+{
+    return $this->hasMany(Classroom::class);
+}
 }

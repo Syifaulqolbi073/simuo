@@ -10,7 +10,7 @@
 
     @unless($active)
 
-        @if($activateRoute)
+        @if(!empty($activateRoute))
 
             <form
                 action="{{ route($activateRoute, $model) }}"
