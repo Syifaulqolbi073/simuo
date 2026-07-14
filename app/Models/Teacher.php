@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Teacher extends Model
 {
@@ -70,4 +71,22 @@ public function getGenderLabelAttribute(): string
 {
     return self::GENDERS[$this->gender] ?? '-';
 }
+/**
+ * Wali kelas.
+ */
+public function homeroomTeachers(): HasMany
+{
+    return $this->hasMany(HomeroomTeacher::class);
+}
+/**
+ * Mata pelajaran yang diampu.
+ */
+public function teacherSubjects(): HasMany
+{
+    return $this->hasMany(TeacherSubject::class);
+}
+
+
+
+
 }

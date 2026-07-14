@@ -45,7 +45,8 @@
     
     
     
-<div class="min-h-screen flex">
+
+<div class="flex min-h-screen bg-slate-100">
 
     {{-- Sidebar Desktop --}}
     <div class="hidden lg:block">
@@ -73,15 +74,15 @@
 
         <x-layout.navbar />
 
-        <main class="flex-1 p-4 lg:p-8">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-8">
 
-            <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-7xl">
 
-                @yield('content')
+        @yield('content')
 
-            </div>
+    </div>
 
-        </main>
+</main>
 
     </div>
 

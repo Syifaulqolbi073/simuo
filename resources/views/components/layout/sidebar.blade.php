@@ -1,4 +1,5 @@
-<aside class="w-72 shrink-0 min-h-screen border-r border-slate-800 bg-slate-900 text-slate-200">
+<aside
+    class="sticky top-0 h-screen w-72 shrink-0 overflow-y-auto border-r border-slate-800 bg-slate-900 text-slate-200">
 
     {{-- Logo --}}
     <div class="flex h-16 items-center border-b border-slate-800 px-6">
@@ -71,28 +72,59 @@
     route="students.index"
     icon="users"
     label="Siswa" />
-     
+<p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
+    Relasi Akademik
+</p>
 
-        {{-- Ujian --}}
-        <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
-            Ujian
-        </p>
+<x-layout.sidebar-item
+    route="student-classrooms.index"
+    icon="user-plus"
+    label="Penempatan Siswa" />
 
-<x-layout.sidebar-disabled
+<x-layout.sidebar-item
+    route="homeroom-teachers.index"
+    icon="identification"
+    label="Wali Kelas" />
+    <x-layout.sidebar-item
+    route="teacher-subjects.index"
+    icon="book-open"
+    label="Guru Mengajar" />
+    
+    
+{{-- Ujian --}}
+<p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
+    Ujian
+</p>
+
+<x-layout.sidebar-item
+    route="exam-types.index"
+    icon="clipboard-document-list"
+    label="Jenis Ujian" />
+
+<x-layout.sidebar-item
+    route="exam-schedules.index"
+    icon="calendar-days"
+    label="Jadwal Ujian" />
+
+<x-layout.sidebar-item
+    route="question-banks.index"
     icon="clipboard-document-list"
     label="Bank Soal" />
 
 <x-layout.sidebar-disabled
-    icon="document-text"
-    label="Paket Ujian" />
+    icon="document-duplicate"
+    label="Paket Soal" />
 
 <x-layout.sidebar-disabled
     icon="play-circle"
-    label="Pelaksanaan" />
+    label="Pelaksanaan Ujian" />
 
 <x-layout.sidebar-disabled
     icon="chart-bar-square"
-    label="Nilai" />
+    label="Nilai Ujian" />
+    
+    
+    
 <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
     Administrasi
 </p>

@@ -48,4 +48,13 @@ public const GROUPS = [
             'is_active' => 'boolean',
         ];
     }
+    /**
+ * Guru pengampu.
+ */
+public function teacherSubjects(): HasMany
+{
+    return $this->hasMany(TeacherSubject::class);
+}
+    
+    
 }

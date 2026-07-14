@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Semester;
 
+
 class AcademicYear extends Model
 {
     use HasUlids;
@@ -43,4 +44,30 @@ class AcademicYear extends Model
 {
     return $this->hasMany(Semester::class);
 }
+/**
+ * Penempatan siswa pada tahun pelajaran ini.
+ */
+public function studentClassrooms(): HasMany
+{
+    return $this->hasMany(StudentClassroom::class);
+}
+
+/**
+ * Wali kelas.
+ */
+public function homeroomTeachers(): HasMany
+{
+    return $this->hasMany(HomeroomTeacher::class);
+}
+/**
+ * Guru mengajar.
+ */
+public function teacherSubjects(): HasMany
+{
+    return $this->hasMany(TeacherSubject::class);
+}
+
+
+
+
 }
