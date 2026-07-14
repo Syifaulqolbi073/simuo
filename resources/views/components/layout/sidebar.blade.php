@@ -21,152 +21,99 @@
     <nav class="px-4 py-6">
 
         {{-- Dashboard --}}
-        <p class="mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
-            Dashboard
-        </p>
 
-        <a href="{{ route('dashboard') }}"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-           {{ request()->routeIs('dashboard') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
 
-            <x-heroicon-o-home class="h-5 w-5"/>
-
-            <span>Dashboard</span>
-
-        </a>
+<x-layout.sidebar-item
+    route="dashboard"
+    icon="home"
+    label="Dashboard" />
 
         {{-- Master Akademik --}}
         <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Master Akademik
         </p>
 
-        <a href="{{ route('academic-years.index') }}"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-           {{ request()->routeIs('academic-years.*') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+<x-layout.sidebar-item
+    route="academic-years.index"
+    icon="calendar-days"
+    label="Tahun Pelajaran" />
 
-            <x-heroicon-o-calendar-days class="h-5 w-5"/>
+<x-layout.sidebar-item
+    route="semesters.index"
+    icon="calendar"
+    label="Semester" />
 
-            <span>Tahun Pelajaran</span>
+<x-layout.sidebar-item
+    route="grades.index"
+    icon="academic-cap"
+    label="Tingkat" />
 
-        </a>
+<x-layout.sidebar-item
+    route="classrooms.index"
+    icon="building-office-2"
+    label="Kelas" />
 
-        <a href="{{ route('semesters.index') }}"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-           {{ request()->routeIs('semesters.*') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-
-            <x-heroicon-o-calendar class="h-5 w-5"/>
-
-            <span>Semester</span>
-
-        </a>
-
-        <a href="{{ route('grades.index') }}"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-           {{ request()->routeIs('grades.*') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-
-            <x-heroicon-o-academic-cap class="h-5 w-5"/>
-
-            <span>Tingkat</span>
-
-        </a>
-
-        <a href="{{ route('classrooms.index') }}"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-           {{ request()->routeIs('classrooms.*') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-
-            <x-heroicon-o-building-office-2 class="h-5 w-5"/>
-
-            <span>Kelas</span>
-
-        </a>
-
-        <a href="{{ route('subjects.index') }}"
-   class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-   {{ request()->routeIs('subjects.*') ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-
-    <x-heroicon-o-book-open class="h-5 w-5"/>
-
-    <span>Mata Pelajaran</span>
-
-</a>
+<x-layout.sidebar-item
+    route="subjects.index"
+    icon="book-open"
+    label="Mata Pelajaran" />
 
         {{-- Master Pengguna --}}
         <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Master Pengguna
         </p>
 
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
-
-            <x-heroicon-o-user-group class="h-5 w-5"/>
-
-            <span>Guru</span>
-
-        </a>
-
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
-
-            <x-heroicon-o-users class="h-5 w-5"/>
-
-            <span>Siswa</span>
-
-        </a>
+<x-layout.sidebar-item
+    route="teachers.index"
+    icon="user-group"
+    label="Guru" />
+    <x-layout.sidebar-item
+    route="students.index"
+    icon="users"
+    label="Siswa" />
+     
 
         {{-- Ujian --}}
         <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Ujian
         </p>
 
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
+<x-layout.sidebar-disabled
+    icon="clipboard-document-list"
+    label="Bank Soal" />
 
-            <x-heroicon-o-clipboard-document-list class="h-5 w-5"/>
+<x-layout.sidebar-disabled
+    icon="document-text"
+    label="Paket Ujian" />
 
-            <span>Bank Soal</span>
+<x-layout.sidebar-disabled
+    icon="play-circle"
+    label="Pelaksanaan" />
 
-        </a>
+<x-layout.sidebar-disabled
+    icon="chart-bar-square"
+    label="Nilai" />
+<p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
+    Administrasi
+</p>
 
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
+<x-layout.sidebar-disabled
+    icon="shield-check"
+    label="Hak Akses" />
 
-            <x-heroicon-o-document-text class="h-5 w-5"/>
-
-            <span>Paket Ujian</span>
-
-        </a>
-
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
-
-            <x-heroicon-o-play-circle class="h-5 w-5"/>
-
-            <span>Pelaksanaan</span>
-
-        </a>
-
-        <a href="#"
-           class="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
-
-            <x-heroicon-o-chart-bar-square class="h-5 w-5"/>
-
-            <span>Nilai</span>
-
-        </a>
+<x-layout.sidebar-disabled
+    icon="users"
+    label="Pengguna" />
 
         {{-- Sistem --}}
         <p class="mt-6 mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Sistem
         </p>
 
-        <a href="#"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500">
+      <x-layout.sidebar-disabled
+    icon="cog-6-tooth"
+    label="Pengaturan" />
 
-            <x-heroicon-o-cog-6-tooth class="h-5 w-5"/>
-
-            <span>Pengaturan</span>
-
-        </a>
 
     </nav>
 
