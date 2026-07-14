@@ -45,10 +45,9 @@
     </a>
 
     <form
-        action="{{ route($deleteRoute, $model) }}"
-        method="POST"
-        onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-
+    action="{{ route($deleteRoute, $model) }}"
+    method="POST"
+    data-confirm-delete>
         @csrf
         @method('DELETE')
 

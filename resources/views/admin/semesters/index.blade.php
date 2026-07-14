@@ -7,35 +7,27 @@
 <div class="space-y-6">
 
     {{-- Header --}}
-    
-<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">
-                Semester
-            </h1>
+  <x-layout.page-header
 
-            <p class="mt-1 text-sm text-slate-500">
-                Kelola data Semester MTs Al Fattah Juwana
-            </p>
-            <p class="mt-1 text-xs text-slate-400">
-   Total : {{ $semesters->total() }} Semester
-</p>
-        </div>
+    title="Semester"
 
-        <a href="{{ route('semesters.create') }}">
+    subtitle="Kelola data Semester"
+
+    :total="$semesters->total()"
+
+    totalLabel="Semester">
+
+   <a href="{{ route('semesters.create') }}">
             <x-ui.button>
                 + Tambah Semester
             </x-ui.button>
         </a>
 
-    </div>
 
-    {{-- Flash Message --}}
-    @if(session('success'))
-        <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
+</x-layout.page-header>  
+
+
+  
 
     {{-- Card --}}
     <x-ui.card>
@@ -172,10 +164,10 @@
 
                             </a>
 
-                            <form
-                                action="{{ route('semesters.destroy',$semester) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+<form
+    action="{{ route('semesters.destroy',$semester) }}"
+    method="POST"
+    data-confirm-delete>
 
                                 @csrf
                                 @method('DELETE')
@@ -200,9 +192,11 @@
 
                 <tr>
 
-                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                    <td colspan="6">
 
-                        Belum ada data Semester.
+                    <x-ui.empty-state
+    title="Belum ada Semester"
+    description="Silakan tambahkan Semester terlebih dahulu." />
 
                     </td>
 

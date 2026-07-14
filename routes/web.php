@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\SubjectController;
 
 Route::middleware(['auth'])->group(function () {
 
@@ -32,6 +33,7 @@ Route::patch(
 
 Route::resource('classrooms', ClassroomController::class);
 
+Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
 
 });
 

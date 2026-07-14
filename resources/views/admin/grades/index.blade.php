@@ -8,29 +8,29 @@
 
     {{-- Header --}}
 
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">
-                Tingkat
-            </h1>
+  <x-layout.page-header
 
-            <p class="mt-1 text-sm text-slate-500">
-                Kelola data Tingkat MTs Al Fattah Juwana
-            </p>
-            <p class="mt-1 text-xs text-slate-400">
-    Total : {{ $grades->total() }} Tingkat
-</p>
-        </div>
+    title="Tingkat"
 
-        <a href="{{ route('grades.create') }}">
-            <x-ui.button variant="primary">
-    + Tambah Tingkat
-</x-ui.button>
-        </a>
+    subtitle="Kelola data Tingkat MTs Al Fattah Juwana"
 
-    </div>
+    :total="$grades->total()"
 
-<x-crud.flash />
+    totalLabel="Tingkat">
+
+    <a href="{{ route('grades.create') }}">
+
+        <x-ui.button>
+
+            + Tambah Tingkat
+
+        </x-ui.button>
+
+    </a>
+
+</x-layout.page-header>
+
+
     {{-- Card --}}
     <x-ui.card>
 
@@ -131,11 +131,13 @@
 
                 <tr>
 
-                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+<td colspan="6">
 
-                        Belum ada data Tingkat.
+    <x-ui.empty-state
+        title="Belum ada data Tingkat"
+        description="Silakan tambahkan data Tingkat terlebih dahulu." />
 
-                    </td>
+</td>
 
                 </tr>
 

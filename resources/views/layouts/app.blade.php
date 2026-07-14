@@ -10,7 +10,41 @@
 </head>
 
 <body class="bg-slate-100" x-data="{ sidebar:false }">
+    
+    @if(session('success'))
+    <div
+        id="toast-message"
+        data-type="success"
+        data-message="{{ session('success') }}">
+    </div>
+@endif
 
+@if(session('error'))
+    <div
+        id="toast-message"
+        data-type="error"
+        data-message="{{ session('error') }}">
+    </div>
+@endif
+
+@if(session('warning'))
+    <div
+        id="toast-message"
+        data-type="warning"
+        data-message="{{ session('warning') }}">
+    </div>
+@endif
+
+@if(session('info'))
+    <div
+        id="toast-message"
+        data-type="info"
+        data-message="{{ session('info') }}">
+    </div>
+@endif
+    
+    
+    
 <div class="min-h-screen flex">
 
     {{-- Sidebar Desktop --}}

@@ -7,35 +7,26 @@
 <div class="space-y-6">
 
     {{-- Header --}}
-    
-<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">
-                Tahun Pelajaran
-            </h1>
+    <x-layout.page-header
 
-            <p class="mt-1 text-sm text-slate-500">
-                Kelola data Tahun Pelajaran MTs Al Fattah Juwana
-            </p>
-            <p class="mt-1 text-xs text-slate-400">
-    Total : {{ $academicYears->total() }} Tahun Pelajaran
-</p>
-        </div>
+    title="Tahun Pelajaran"
 
-        <a href="{{ route('academic-years.create') }}">
+    subtitle="Kelola data Tahun Pelajaran"
+
+    :total="$academicYears->total()"
+
+    totalLabel="Tahun Pelajaran">
+
+    ... <a href="{{ route('academic-years.create') }}">
             <x-ui.button>
                 + Tambah Tahun Pelajaran
             </x-ui.button>
         </a>
 
-    </div>
+</x-layout.page-header>
 
-    {{-- Flash Message --}}
-    @if(session('success'))
-        <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
+
+
 
     {{-- Card --}}
     <x-ui.card>
@@ -176,10 +167,10 @@
 
                             </a>
 
-                            <form
-                                action="{{ route('academic-years.destroy',$academicYear) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+<form
+    action="{{ route('academic-years.destroy',$academicYear) }}"
+    method="POST"
+    data-confirm-delete>
 
                                 @csrf
                                 @method('DELETE')
@@ -204,10 +195,10 @@
 
                 <tr>
 
-                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
-
-                        Belum ada data Tahun Pelajaran.
-
+                    <td colspan="6">
+<x-ui.empty-state
+    title="Belum ada Tahun Pelajaran"
+    description="Silakan tambahkan Tahun Pelajaran terlebih dahulu." />
                     </td>
 
                 </tr>

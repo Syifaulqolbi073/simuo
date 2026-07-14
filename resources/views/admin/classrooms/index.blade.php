@@ -7,30 +7,27 @@
 <div class="space-y-6">
 
     {{-- Header --}}
+<x-layout.page-header
 
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">
-                Kelas
-            </h1>
+    title="Kelas"
 
-            <p class="mt-1 text-sm text-slate-500">
-                Kelola data Kelas MTs Al Fattah Juwana
-            </p>
-            <p class="mt-1 text-xs text-slate-400">
-    Total : {{ $classrooms->total() }} Kelas
-</p>
-        </div>
+    subtitle="Kelola data Kelas"
 
-        <a href="{{ route('classrooms.create') }}">
+    :total="$classrooms->total()"
+
+    totalLabel="Kelas">
+
+  <a href="{{ route('classrooms.create') }}">
             <x-ui.button variant="primary">
     + Tambah Kelas
 </x-ui.button>
         </a>
 
-    </div>
 
-<x-crud.flash />
+</x-layout.page-header>
+    
+
+
     {{-- Card --}}
     <x-ui.card>
 
@@ -136,9 +133,11 @@
 
                 <tr>
 
-                    <td colspan="7" class="px-6 py-12 text-center text-slate-500">
+                    <td colspan="7">
 
-                        Belum ada data Kelas.
+                    <x-ui.empty-state
+    title="Belum ada Kelas"
+    description="Silakan tambahkan Kelas terlebih dahulu." />
 
                     </td>
 
