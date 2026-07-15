@@ -62,4 +62,21 @@ class Question extends Model
             ->where('is_active', true)
             ->orderBy('sort_order');
     }
+    /**
+ * Ambil option berdasarkan huruf
+ */
+public function option(string $key): ?QuestionOption
+{
+    return $this->options
+        ->firstWhere('option_key', $key);
+}
+
+/**
+ * Ambil jawaban benar
+ */
+public function correctOption(): ?QuestionOption
+{
+    return $this->options
+        ->firstWhere('is_correct', true);
+}
 }

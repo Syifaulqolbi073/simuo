@@ -1,170 +1,255 @@
 @csrf
 
-<div class="grid grid-cols-1 gap-6">
+<div class="space-y-8">
 
-    {{-- Jenis Soal --}}
-    <div>
+    {{-- Informasi Soal --}}
+    <x-ui.card>
 
-        <label class="mb-2 block text-sm font-medium text-slate-700">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="font-semibold text-slate-800">
+                Informasi Soal
+            </h3>
+        </div>
 
-            Jenis Soal
+        <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
 
-        </label>
+            {{-- Jenis --}}
+            <div>
 
-        <select
-            name="question_type"
-            class="w-full rounded-lg border-slate-300">
+                <label class="mb-2 block text-sm font-medium">
+                    Jenis Soal
+                </label>
 
-            <option value="MCQ"
-                @selected(old('question_type', $question->question_type ?? '') == 'MCQ')>
+                <select
+                    name="question_type"
+                    class="w-full rounded-lg border-slate-300">
 
-                Pilihan Ganda
+                    @foreach(config('question.types') as $value => $label)
 
-            </option>
+                        <option
+                            value="{{ $value }}"
+                            @selected(old('question_type',$question->question_type ?? 'MCQ')==$value)>
 
-            <option value="ESSAY"
-                @selected(old('question_type', $question->question_type ?? '') == 'ESSAY')>
+                            {{ $label }}
 
-                Essay
+                        </option>
 
-            </option>
+                    @endforeach
 
-        </select>
+                </select>
 
-    </div>
+            </div>
 
-    {{-- Bobot --}}
-    <div>
+            {{-- Bobot --}}
+            <div>
 
-        <label class="mb-2 block text-sm font-medium">
+                <label class="mb-2 block text-sm font-medium">
 
-            Bobot
+                    Bobot
 
-        </label>
+                </label>
 
-        <input
-            type="number"
-            name="score"
-            min="1"
-            value="{{ old('score', $question->score ?? 1) }}"
-            class="w-full rounded-lg border-slate-300">
+                <input
+                    type="number"
+                    name="score"
+                    min="1"
+                    value="{{ old('score',$question->score ?? 1) }}"
+                    class="w-full rounded-lg border-slate-300">
 
-    </div>
+            </div>
 
-    {{-- Tingkat Kesulitan --}}
-    <div>
+            {{-- Kesulitan --}}
+            <div>
 
-        <label class="mb-2 block text-sm font-medium">
+                <label class="mb-2 block text-sm font-medium">
 
-            Tingkat Kesulitan
+                    Kesulitan
 
-        </label>
+                </label>
 
-        <select
-            name="difficulty"
-            class="w-full rounded-lg border-slate-300">
+                <select
+                    name="difficulty"
+                    class="w-full rounded-lg border-slate-300">
 
-            <option value="Mudah"
-                @selected(old('difficulty', $question->difficulty ?? '') == 'Mudah')>
+                    @foreach(config('question.difficulty') as $difficulty)
 
-                Mudah
+                        <option
+                            value="{{ $difficulty }}"
+                            @selected(old('difficulty',$question->difficulty ?? 'Sedang')==$difficulty)>
 
-            </option>
+                            {{ $difficulty }}
 
-            <option value="Sedang"
-                @selected(old('difficulty', $question->difficulty ?? 'Sedang') == 'Sedang')>
+                        </option>
 
-                Sedang
+                    @endforeach
 
-            </option>
+                </select>
 
-            <option value="Sulit"
-                @selected(old('difficulty', $question->difficulty ?? '') == 'Sulit')>
+            </div>
 
-                Sulit
+        </div>
 
-            </option>
-
-        </select>
-
-    </div>
+    </x-ui.card>
 
     {{-- Isi Soal --}}
-    <div>
+    <x-ui.card>
 
-        <label class="mb-2 block text-sm font-medium">
+        <div class="border-b border-slate-200 px-6 py-4">
 
-            Isi Soal
+            <h3 class="font-semibold">
 
-        </label>
+                Isi Soal
 
-        <textarea
-            name="question_text"
-            rows="8"
-            class="w-full rounded-lg border-slate-300">{{ old('question_text', $question->question_text ?? '') }}</textarea>
+            </h3>
+
+        </div>
+
+        <div class="p-6">
+
+            <textarea
+                name="question_text"
+                rows="8"
+                class="w-full rounded-lg border-slate-300">{{ old('question_text',$question->question_text ?? '') }}</textarea>
+
+        </div>
+
+    </x-ui.card>
+
+{{-- Pilihan Jawaban --}}
+<x-ui.card>
+
+    <div class="border-b border-slate-200 px-6 py-4">
+
+        <h3 class="font-semibold">
+            Pilihan Jawaban
+        </h3>
+
+        <p class="text-sm text-slate-500">
+            Pilih satu jawaban yang benar.
+        </p>
 
     </div>
+
+    <div class="space-y-4 p-6">
+
+       @foreach(['A','B','C','D','E'] as $huruf)
+
+    @php
+        $option = $question?->option($huruf);
+
+        $value = old(
+            'option_' . strtolower($huruf),
+            data_get($option, 'option_text')
+        );
+
+        $correct = old(
+            'correct_answer',
+            $question?->correctOption()?->option_key
+        );
+    @endphp
+
+            <div class="flex items-start gap-4">
+
+                <input
+    type="radio"
+    name="correct_answer"
+    value="{{ $huruf }}"
+    class="mt-3 h-5 w-5"
+    @checked($correct === $huruf)
+>
+
+                <div class="w-8 pt-2 font-semibold">
+
+                    {{ $huruf }}
+
+                </div>
+
+               <textarea
+    rows="2"
+    name="option_{{ strtolower($huruf) }}"
+    class="flex-1 rounded-lg border-slate-300"
+    placeholder="Pilihan {{ $huruf }}"
+>{{ $value }}</textarea>
+
+            </div>
+
+        @endforeach
+
+    </div>
+
+</x-ui.card>
 
     {{-- Pembahasan --}}
-    <div>
+    <x-ui.card>
 
-        <label class="mb-2 block text-sm font-medium">
+        <div class="border-b border-slate-200 px-6 py-4">
 
-            Pembahasan
+            <h3 class="font-semibold">
 
-        </label>
+                Pembahasan
 
-        <textarea
-            name="discussion"
-            rows="6"
-            class="w-full rounded-lg border-slate-300">{{ old('discussion', $question->discussion ?? '') }}</textarea>
+            </h3>
 
-    </div>
+        </div>
+
+        <div class="p-6">
+
+            <textarea
+                name="discussion"
+                rows="6"
+                class="w-full rounded-lg border-slate-300">{{ old('discussion',$question->discussion ?? '') }}</textarea>
+
+        </div>
+
+    </x-ui.card>
 
     {{-- Status --}}
-    <div>
+    <x-ui.card>
 
-        <label class="mb-2 block text-sm font-medium">
+        <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
 
-            Status
+            <div>
 
-        </label>
+                <label class="mb-2 block text-sm font-medium">
 
-        <select
-            name="is_active"
-            class="w-full rounded-lg border-slate-300">
+                    Status
 
-            <option value="1"
-                @selected(old('is_active', $question->is_active ?? true))>
+                </label>
 
-                Aktif
+                <select
+                    name="is_active"
+                    class="w-full rounded-lg border-slate-300">
 
-            </option>
+                    <option value="1">Aktif</option>
 
-            <option value="0"
-                @selected(old('is_active', $question->is_active ?? false) == false)>
+                    <option value="0">Nonaktif</option>
 
-                Nonaktif
+                </select>
 
-            </option>
+            </div>
 
-        </select>
+        </div>
 
-    </div>
+    </x-ui.card>
 
 </div>
 
-<div class="mt-8 flex justify-end gap-3">
+<div class="mt-8 flex items-center justify-end gap-3">
 
-    <a
-        href="{{ route('question-banks.questions.index', $questionBank) }}"
-        class="rounded-lg border border-slate-300 px-4 py-2 hover:bg-slate-100">
+    <x-ui.button
+        type="button"
+        variant="secondary"
+        onclick="history.back()">
+
+        <x-heroicon-o-arrow-left class="h-5 w-5"/>
 
         Batal
 
-    </a>
+    </x-ui.button>
 
     <x-ui.button>
+
+        <x-heroicon-o-check class="h-5 w-5"/>
 
         Simpan
 

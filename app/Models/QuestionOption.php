@@ -40,4 +40,11 @@ class QuestionOption extends Model
     {
         return $this->belongsTo(Question::class);
     }
+    /**
+ * Bank Soal
+ */
+public function questionBank()
+{
+    return $this->question->questionBank();
+}
 }
