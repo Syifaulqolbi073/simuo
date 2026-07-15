@@ -38,6 +38,30 @@
         </div>
 
     </x-layout.page-header>
+    
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+
+    <x-ui.stat-card
+        title="Total Soal"
+        :value="$statistics['total']"
+        icon="heroicon-o-document-text"/>
+
+    <x-ui.stat-card
+        title="Total Bobot"
+        :value="$statistics['score']"
+        icon="heroicon-o-calculator"/>
+
+    <x-ui.stat-card
+        title="Pilihan Ganda"
+        :value="$statistics['mcq']"
+        icon="heroicon-o-check-circle"/>
+
+    <x-ui.stat-card
+        title="Essay"
+        :value="$statistics['essay']"
+        icon="heroicon-o-pencil-square"/>
+
+</div>
 
     <x-ui.card>
 
@@ -48,6 +72,36 @@
                 placeholder="Cari soal..." />
 
         </div>
+        <div class="flex flex-wrap gap-2 border-t border-slate-200 p-5">
+
+    <a
+        href="{{ route('question-banks.questions.index',$questionBank) }}"
+        class="rounded-full bg-slate-200 px-4 py-2 text-sm">
+
+        Semua
+
+    </a>
+
+    @foreach(config('question.types') as $key=>$label)
+
+        <a
+            href="{{ route(
+                'question-banks.questions.index',
+                array_merge(
+                    ['question_bank'=>$questionBank],
+                    request()->except('page','type'),
+                    ['type'=>$key]
+                )
+            ) }}"
+            class="rounded-full border px-4 py-2 text-sm">
+
+            {{ $label }}
+
+        </a>
+
+    @endforeach
+
+</div>
 
         <x-ui.table>
 
@@ -64,6 +118,8 @@
                     <th>Bobot</th>
 
                     <th>Kesulitan</th>
+                    
+                    <th>Opsi</th>
 
                     <th>Status</th>
 
@@ -97,12 +153,16 @@
 
                     <td>
 
-                        <x-ui.badge type="info">
+@php
+$type = config('question.types')[$item->question_type]
+    ?? $item->question_type;
+@endphp
 
-                            {{ $item->question_type }}
+<x-ui.badge type="info">
 
-                        </x-ui.badge>
+    {{ $type }}
 
+</x-ui.badge>
                     </td>
 
                     <td>
@@ -129,6 +189,20 @@
                         </x-ui.badge>
 
                     </td>
+                    
+                    <td>
+
+    @if($item->question_type === 'MCQ')
+
+        {{ $item->options()->count() }} Pilihan
+
+    @else
+
+        -
+
+    @endif
+
+</td>
 
                     <td>
 
@@ -155,7 +229,42 @@
                     <td class="text-center">
 
                         <x-ui.action-menu>
+<x-ui.actions.link
+    :href="route('question-banks.questions.show', [$questionBank, $item])">
 
+    <x-heroicon-o-eye class="h-4 w-4"/>
+
+    <span>Preview</span>
+
+</x-ui.actions.link>
+<x-ui.actions.link
+    :href="route(
+        'question-banks.questions.media.index',
+        [$questionBank, $item]
+    )">
+
+    <x-heroicon-o-photo class="h-4 w-4"/>
+
+    <span>Media</span>
+
+</x-ui.actions.link>
+<form
+    action="{{ route('question-banks.questions.duplicate', [$questionBank, $item]) }}"
+    method="POST">
+
+    @csrf
+
+    <button
+        type="submit"
+        class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm hover:bg-slate-100">
+
+        <x-heroicon-o-document-duplicate class="h-4 w-4"/>
+
+        <span>Duplikat</span>
+
+    </button>
+
+</form>
                             <x-ui.actions.link
                                 :href="route('question-banks.questions.edit', [$questionBank, $item])">
 

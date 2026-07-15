@@ -2,94 +2,14 @@
 
 <div class="space-y-8">
 
-    {{-- Informasi Soal --}}
-    <x-ui.card>
+    @include('admin.question-banks.questions.partials.header')
 
-        <div class="border-b border-slate-200 px-6 py-4">
-            <h3 class="font-semibold text-slate-800">
-                Informasi Soal
-            </h3>
-        </div>
+    {{-- editor --}}
+    {{-- options --}}
+    {{-- discussion --}}
+    {{-- footer --}}
 
-        <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
-
-            {{-- Jenis --}}
-            <div>
-
-                <label class="mb-2 block text-sm font-medium">
-                    Jenis Soal
-                </label>
-
-                <select
-                    name="question_type"
-                    class="w-full rounded-lg border-slate-300">
-
-                    @foreach(config('question.types') as $value => $label)
-
-                        <option
-                            value="{{ $value }}"
-                            @selected(old('question_type',$question->question_type ?? 'MCQ')==$value)>
-
-                            {{ $label }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-            </div>
-
-            {{-- Bobot --}}
-            <div>
-
-                <label class="mb-2 block text-sm font-medium">
-
-                    Bobot
-
-                </label>
-
-                <input
-                    type="number"
-                    name="score"
-                    min="1"
-                    value="{{ old('score',$question->score ?? 1) }}"
-                    class="w-full rounded-lg border-slate-300">
-
-            </div>
-
-            {{-- Kesulitan --}}
-            <div>
-
-                <label class="mb-2 block text-sm font-medium">
-
-                    Kesulitan
-
-                </label>
-
-                <select
-                    name="difficulty"
-                    class="w-full rounded-lg border-slate-300">
-
-                    @foreach(config('question.difficulty') as $difficulty)
-
-                        <option
-                            value="{{ $difficulty }}"
-                            @selected(old('difficulty',$question->difficulty ?? 'Sedang')==$difficulty)>
-
-                            {{ $difficulty }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-            </div>
-
-        </div>
-
-    </x-ui.card>
+</div>
 
     {{-- Isi Soal --}}
     <x-ui.card>
@@ -132,31 +52,30 @@
 
     <div class="space-y-4 p-6">
 
-       @foreach(['A','B','C','D','E'] as $huruf)
+        @foreach(['A','B','C','D','E'] as $huruf)
 
-    @php
-        $option = $question?->option($huruf);
-
-        $value = old(
-            'option_' . strtolower($huruf),
-            data_get($option, 'option_text')
-        );
-
-        $correct = old(
-            'correct_answer',
-            $question?->correctOption()?->option_key
-        );
-    @endphp
+            @php
+                $option = isset($question)
+                    ? $question->option($huruf)
+                    : null;
+            @endphp
 
             <div class="flex items-start gap-4">
 
                 <input
-    type="radio"
-    name="correct_answer"
-    value="{{ $huruf }}"
-    class="mt-3 h-5 w-5"
-    @checked($correct === $huruf)
->
+                    type="radio"
+                    name="correct_answer"
+                    value="{{ $huruf }}"
+                    class="mt-3 h-5 w-5"
+
+                    @checked(
+                        old(
+                            'correct_answer',
+                            optional($question ?? null)
+                                ->correctOption()?->option_key
+                        ) == $huruf
+                    )
+                >
 
                 <div class="w-8 pt-2 font-semibold">
 
@@ -164,12 +83,14 @@
 
                 </div>
 
-               <textarea
-    rows="2"
-    name="option_{{ strtolower($huruf) }}"
-    class="flex-1 rounded-lg border-slate-300"
-    placeholder="Pilihan {{ $huruf }}"
->{{ $value }}</textarea>
+                <textarea
+                    rows="2"
+                    name="option_{{ strtolower($huruf) }}"
+                    class="flex-1 rounded-lg border-slate-300"
+                    placeholder="Pilihan {{ $huruf }}">{{ old(
+                        'option_'.strtolower($huruf),
+                        $option?->option_text
+                    ) }}</textarea>
 
             </div>
 

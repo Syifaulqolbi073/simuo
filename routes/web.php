@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ExamTypeController;
 use App\Http\Controllers\Admin\ExamScheduleController;
 use App\Http\Controllers\Admin\QuestionBankController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\QuestionMediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,7 +125,20 @@ Route::resource(
     'question-banks.questions',
     QuestionController::class
 );
+Route::post(
+    'question-banks/{question_bank}/questions/{question}/duplicate',
+    [QuestionController::class, 'duplicate']
+)->name('question-banks.questions.duplicate');
     
+Route::resource(
+    'question-banks.questions.media',
+    QuestionMediaController::class
+)->only([
+    'index',
+    'create',
+    'store',
+    'destroy',
+]);
     
 });
 

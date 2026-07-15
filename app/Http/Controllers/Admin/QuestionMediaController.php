@@ -3,63 +3,126 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\QuestionMediaStoreRequest;
+use App\Models\Question;
+use App\Models\QuestionBank;
+use App\Models\QuestionMedia;
+use App\Services\MediaService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class QuestionMediaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Daftar Media
      */
-    public function index()
-    {
-        //
+    public function index(
+        QuestionBank $questionBank,
+        Question $question
+    ): View {
+
+        abort_if(
+            $question->question_bank_id !== $questionBank->id,
+            404
+        );
+
+        $media = $question
+            ->media()
+            ->latest()
+            ->get();
+
+        return view(
+            'admin.question-banks.questions.media.index',
+            compact(
+                'questionBank',
+                'question',
+                'media'
+            )
+        );
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Form Upload
      */
-    public function create()
-    {
-        //
+    public function create(
+        QuestionBank $questionBank,
+        Question $question
+    ): View {
+
+        abort_if(
+            $question->question_bank_id !== $questionBank->id,
+            404
+        );
+
+        return view(
+            'admin.question-banks.questions.media.create',
+            compact(
+                'questionBank',
+                'question'
+            )
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+/**
+ * Upload Media
+ */
+public function store(
+    QuestionMediaStoreRequest $request,
+    QuestionBank $questionBank,
+    Question $question,
+    MediaService $mediaService
+): RedirectResponse {
+
+    
+
+    $data = $request->validated();
+
+    $folder = match ($data['media_type']) {
+        'IMAGE' => 'images',
+        'AUDIO' => 'audio',
+        'VIDEO' => 'video',
+        default => 'documents',
+    };
+
+    $upload = $mediaService->upload(
+        $request->file('file'),
+        $folder
+    );
+
+    $question->media()->create([
+        'media_type' => $data['media_type'],
+        'file_name'  => $upload['file_name'],
+        'file_path'  => $upload['file_path'],
+        'mime_type'  => $upload['mime_type'],
+        'file_size'  => $upload['file_size'],
+        'sort_order' => $data['sort_order'] ?? 1,
+        'is_active'  => $data['is_active'] ?? true,
+    ]);
+
+    return redirect()
+        ->route(
+            'question-banks.questions.media.index',
+            [$questionBank, $question]
+        )
+        ->with('success', 'Media berhasil diunggah.');
+}
 
     /**
-     * Display the specified resource.
+     * Hapus Media
      */
-    public function show(string $id)
-    {
-        //
-    }
+    public function destroy(
+        QuestionBank $questionBank,
+        Question $question,
+        QuestionMedia $media,
+        MediaService $mediaService
+    ): RedirectResponse {
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // kita isi nanti
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back()
+            ->with(
+                'success',
+                'Media berhasil dihapus.'
+            );
     }
 }

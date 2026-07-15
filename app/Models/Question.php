@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class Question extends Model
 {
     use HasUlids;
@@ -62,6 +63,15 @@ class Question extends Model
             ->where('is_active', true)
             ->orderBy('sort_order');
     }
+    /**
+ * Media Soal
+ */
+public function media(): HasMany
+{
+    return $this->hasMany(QuestionMedia::class)
+        ->orderBy('sort_order');
+}
+    
     /**
  * Ambil option berdasarkan huruf
  */

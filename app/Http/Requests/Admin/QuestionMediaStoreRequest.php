@@ -2,28 +2,68 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class QuestionMediaStoreRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorize
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * Validation Rules
      */
     public function rules(): array
     {
         return [
-            //
+
+            'file' => [
+
+                'required',
+
+                'file',
+
+                'max:10240', // 10 MB
+
+               'file' => [
+    'required',
+    'file',
+    'max:10240',
+    'mimes:jpg,jpeg,png,webp,gif,mp3,wav,ogg,mp4,mov,avi,pdf',
+],
+
+            ],
+
+            'media_type' => [
+
+                'required',
+
+                'in:IMAGE,AUDIO,VIDEO,DOCUMENT',
+
+            ],
+
+            'sort_order' => [
+
+                'nullable',
+
+                'integer',
+
+                'min:1',
+
+            ],
+
+            'is_active' => [
+
+                'required',
+
+                'boolean',
+
+            ],
+
         ];
     }
 }

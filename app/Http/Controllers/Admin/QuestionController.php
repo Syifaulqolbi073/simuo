@@ -17,21 +17,94 @@ class QuestionController extends Controller
     /**
      * Daftar Soal
      */
-    public function index(QuestionBank $questionBank): View
-    {
-        $questions = $questionBank
-            ->questions()
-            ->latest()
-            ->paginate(20);
+    public function index(
+    QuestionBank $questionBank
+): View {
 
-        return view(
-            'admin.question-banks.questions.index',
-            compact(
-                'questionBank',
-                'questions'
-            )
+    $query = $questionBank->questions();
+
+if (request()->filled('search')) {
+
+    $query->where(function ($q) {
+
+        $q->where(
+            'question_text',
+            'like',
+            '%' . request('search') . '%'
+        )
+
+        ->orWhere(
+            'discussion',
+            'like',
+            '%' . request('search') . '%'
         );
-    }
+
+    });
+
+}
+
+if (request()->filled('type')) {
+
+    $query->where(
+        'question_type',
+        request('type')
+    );
+
+}
+
+if (request()->filled('difficulty')) {
+
+    $query->where(
+        'difficulty',
+        request('difficulty')
+    );
+
+}
+
+if (request()->filled('status')) {
+
+    $query->where(
+        'is_active',
+        request('status')
+    );
+
+}
+
+$questions = $query
+    ->latest()
+    ->paginate(20)
+    ->withQueryString();
+
+    $statistics = [
+
+    // Menggunakan nilai yang sudah disimpan di tabel question_banks
+    'total' => $questionBank->total_question,
+
+    'score' => $questionBank->total_score,
+
+    // Tetap dihitung karena belum ada kolom khusus
+    'mcq' => $questionBank
+        ->questions()
+        ->where('question_type', 'MCQ')
+        ->count(),
+
+    'essay' => $questionBank
+        ->questions()
+        ->where('question_type', 'ESSAY')
+        ->count(),
+
+];
+
+    return view(
+        'admin.question-banks.questions.index',
+        compact(
+            'questionBank',
+            'questions',
+            'statistics'
+        )
+    );
+
+}
 
     /**
      * Form Tambah
@@ -199,6 +272,77 @@ public function edit(
         ->with(
             'success',
             'Soal berhasil diperbarui.'
+        );
+}
+/**
+ * Preview Soal
+ */
+public function show(
+    QuestionBank $questionBank,
+    Question $question
+): View {
+
+    abort_if(
+        $question->question_bank_id !== $questionBank->id,
+        404
+    );
+
+    $question->load('options');
+
+    return view(
+        'admin.question-banks.questions.show',
+        compact(
+            'questionBank',
+            'question'
+        )
+    );
+}
+/**
+ * Duplicate Soal
+ */
+public function duplicate(
+    QuestionBank $questionBank,
+    Question $question
+): RedirectResponse {
+
+    abort_if(
+        $question->question_bank_id !== $questionBank->id,
+        404
+    );
+
+    DB::transaction(function () use ($questionBank, $question) {
+
+        // Muat semua pilihan jawaban
+        $question->load('options');
+
+        // Duplikasi soal
+        $newQuestion = $question->replicate();
+        $newQuestion->save();
+
+        // Duplikasi semua pilihan jawaban
+        foreach ($question->options as $option) {
+
+            $newOption = $option->replicate();
+
+            $newOption->question_id = $newQuestion->id;
+
+            $newOption->save();
+
+        }
+
+        // Update statistik bank soal
+        $this->updateQuestionBank($questionBank);
+
+    });
+
+    return redirect()
+        ->route(
+            'question-banks.questions.index',
+            $questionBank
+        )
+        ->with(
+            'success',
+            'Soal berhasil diduplikasi.'
         );
 }
 
