@@ -89,4 +89,14 @@ public function correctOption(): ?QuestionOption
     return $this->options
         ->firstWhere('is_correct', true);
 }
+
+/**
+ * Paket Ujian
+ */
+public function examPackages(): HasMany
+{
+    return $this->hasMany(ExamPackageQuestion::class);
+}
+
+
 }

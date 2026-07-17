@@ -25,6 +25,11 @@ class ExamScheduleStoreRequest extends FormRequest
                 'required',
                 'exists:exam_types,id',
             ],
+            
+            'question_bank_id' => [
+    'required',
+    'exists:question_banks,id',
+],
 
             'title' => [
                 'required',

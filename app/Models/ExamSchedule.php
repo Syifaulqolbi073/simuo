@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExamSchedule extends Model
@@ -16,11 +17,16 @@ class ExamSchedule extends Model
 
     public $incrementing = false;
 
+    /**
+     * Mass Assignment
+     */
     protected $fillable = [
 
         'teacher_subject_id',
 
         'exam_type_id',
+
+        'question_bank_id',
 
         'title',
 
@@ -66,6 +72,9 @@ class ExamSchedule extends Model
 
     ];
 
+    /**
+     * Attribute Casting
+     */
     protected function casts(): array
     {
         return [
@@ -100,7 +109,7 @@ class ExamSchedule extends Model
     }
 
     /**
-     * Guru Mengajar.
+     * Guru Mengajar
      */
     public function teacherSubject(): BelongsTo
     {
@@ -108,7 +117,7 @@ class ExamSchedule extends Model
     }
 
     /**
-     * Jenis Ujian.
+     * Jenis Ujian
      */
     public function examType(): BelongsTo
     {
@@ -116,7 +125,23 @@ class ExamSchedule extends Model
     }
 
     /**
-     * Status yang tersedia.
+     * Bank Soal
+     */
+    public function questionBank(): BelongsTo
+    {
+        return $this->belongsTo(QuestionBank::class);
+    }
+
+    /**
+     * Paket Ujian
+     */
+    public function packages(): HasMany
+    {
+        return $this->hasMany(ExamPackage::class);
+    }
+
+    /**
+     * Status yang tersedia
      */
     public const STATUSES = [
 
@@ -132,8 +157,19 @@ class ExamSchedule extends Model
 
     ];
 
+    /**
+     * Label Status
+     */
     public function getStatusLabelAttribute(): string
     {
         return self::STATUSES[$this->status] ?? '-';
     }
+    public function attempts(): HasMany
+{
+    return $this->hasMany(ExamAttempt::class);
+}
+    
+    
+    
+    
 }

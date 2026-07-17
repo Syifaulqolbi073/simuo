@@ -76,6 +76,50 @@
         @enderror
 
     </div>
+    
+    {{-- Bank Soal --}}
+<div>
+
+    <label class="mb-2 block font-medium">
+        Bank Soal
+    </label>
+
+    <select
+        name="question_bank_id"
+        class="w-full rounded-lg border-gray-300"
+        required>
+
+        <option value="">
+            -- Pilih Bank Soal --
+        </option>
+
+        @foreach($questionBanks as $item)
+
+            <option
+                value="{{ $item->id }}"
+                @selected(old(
+                    'question_bank_id',
+                    $examSchedule->question_bank_id ?? ''
+                ) == $item->id)>
+
+                {{ $item->title }}
+                ({{ $item->total_question }} soal)
+
+            </option>
+
+        @endforeach
+
+    </select>
+
+    @error('question_bank_id')
+
+        <p class="mt-1 text-sm text-red-600">
+            {{ $message }}
+        </p>
+
+    @enderror
+
+</div>
 
     {{-- Judul --}}
     <div class="md:col-span-2">

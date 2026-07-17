@@ -80,4 +80,10 @@ public function classrooms(): HasMany
 {
     return $this->hasMany(StudentClassroom::class);
 }
+public function examAttempts(): HasMany
+{
+    return $this->hasMany(ExamAttempt::class);
+}
+
+
 }

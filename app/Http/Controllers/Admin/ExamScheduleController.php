@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\ExamScheduleStoreRequest;
 use App\Http\Requests\Admin\ExamScheduleUpdateRequest;
 use App\Models\ExamSchedule;
 use App\Models\ExamType;
+use App\Models\QuestionBank;
 use App\Models\TeacherSubject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
@@ -26,6 +27,7 @@ class ExamScheduleController extends Controller
                 'teacherSubject.subject',
                 'teacherSubject.classroom',
                 'examType',
+                'questionBank',
             ])
             ->when($search, function ($query) use ($search) {
 
@@ -71,11 +73,16 @@ class ExamScheduleController extends Controller
             ->orderBy('name')
             ->get();
 
+        $questionBanks = QuestionBank::where('is_active', true)
+            ->orderBy('title')
+            ->get();
+
         return view(
             'admin.exam-schedules.create',
             compact(
                 'teacherSubjects',
-                'examTypes'
+                'examTypes',
+                'questionBanks'
             )
         );
     }
@@ -90,43 +97,24 @@ class ExamScheduleController extends Controller
         $data = $request->validated();
 
         if (empty($data['token'])) {
-
             $data['token'] = random_int(100000, 999999);
-
         }
 
-        $booleanFields = [
-
+        foreach ([
             'token_required',
-
             'shuffle_question',
-
             'shuffle_option',
-
             'show_score',
-
             'show_answer',
-
             'fullscreen_mode',
-
             'one_device_only',
-
             'auto_submit',
-
             'allow_retry',
-
             'show_timer',
-
             'is_published',
-
             'is_active',
-
-        ];
-
-        foreach ($booleanFields as $field) {
-
+        ] as $field) {
             $data[$field] = $request->boolean($field);
-
         }
 
         ExamSchedule::create($data);
@@ -138,7 +126,8 @@ class ExamScheduleController extends Controller
                 'Jadwal ujian berhasil ditambahkan.'
             );
     }
-        /**
+
+    /**
      * Detail.
      */
     public function show(ExamSchedule $examSchedule)
@@ -165,12 +154,17 @@ class ExamScheduleController extends Controller
             ->orderBy('name')
             ->get();
 
+        $questionBanks = QuestionBank::where('is_active', true)
+            ->orderBy('title')
+            ->get();
+
         return view(
             'admin.exam-schedules.edit',
             compact(
                 'examSchedule',
                 'teacherSubjects',
-                'examTypes'
+                'examTypes',
+                'questionBanks'
             )
         );
     }
@@ -184,45 +178,27 @@ class ExamScheduleController extends Controller
     ): RedirectResponse {
 
         $data = $request->validated();
+        
 
         if (empty($data['token'])) {
-
             $data['token'] = random_int(100000, 999999);
-
         }
 
-        $booleanFields = [
-
+        foreach ([
             'token_required',
-
             'shuffle_question',
-
             'shuffle_option',
-
             'show_score',
-
             'show_answer',
-
             'fullscreen_mode',
-
             'one_device_only',
-
             'auto_submit',
-
             'allow_retry',
-
             'show_timer',
-
             'is_published',
-
             'is_active',
-
-        ];
-
-        foreach ($booleanFields as $field) {
-
+        ] as $field) {
             $data[$field] = $request->boolean($field);
-
         }
 
         $examSchedule->update($data);
@@ -234,81 +210,69 @@ class ExamScheduleController extends Controller
                 'Jadwal ujian berhasil diperbarui.'
             );
     }
-    
+
     /**
- * Publish / Unpublish Jadwal.
- */
-public function publish(
-    ExamSchedule $examSchedule
-): RedirectResponse {
+     * Publish / Unpublish Jadwal.
+     */
+    public function publish(
+        ExamSchedule $examSchedule
+    ): RedirectResponse {
 
-    $examSchedule->update([
+        $examSchedule->update([
+            'is_published' => ! $examSchedule->is_published,
+        ]);
 
-        'is_published' => ! $examSchedule->is_published,
-
-    ]);
-
-    return back()->with(
-        'success',
-        $examSchedule->is_published
-            ? 'Jadwal ujian berhasil dipublikasikan.'
-            : 'Jadwal ujian berhasil disembunyikan.'
-    );
-
-}
-/**
- * Generate token baru.
- */
-public function generateToken(
-    ExamSchedule $examSchedule
-): RedirectResponse {
-
-    $examSchedule->update([
-
-        'token' => (string) random_int(100000, 999999),
-
-    ]);
-
-    return back()->with(
-        'success',
-        'Token ujian berhasil dibuat.'
-    );
-
-}
-
-/**
- * Duplikasi jadwal ujian.
- */
-public function duplicate(
-    ExamSchedule $examSchedule
-): RedirectResponse {
-
-    $newExam = $examSchedule->replicate();
-
-    $newExam->id = (string) Str::ulid();
-
-    $newExam->title = $examSchedule->title . ' (Copy)';
-
-    $newExam->token = random_int(100000, 999999);
-
-    $newExam->status = 'Draft';
-
-    $newExam->is_published = false;
-
-    $newExam->created_at = now();
-
-    $newExam->updated_at = now();
-
-    $newExam->save();
-
-    return redirect()
-        ->route('exam-schedules.edit', $newExam)
-        ->with(
+        return back()->with(
             'success',
-            'Jadwal ujian berhasil diduplikasi.'
+            $examSchedule->is_published
+                ? 'Jadwal ujian berhasil dipublikasikan.'
+                : 'Jadwal ujian berhasil disembunyikan.'
         );
+    }
 
-}
+    /**
+     * Generate token baru.
+     */
+    public function generateToken(
+        ExamSchedule $examSchedule
+    ): RedirectResponse {
+
+        $examSchedule->update([
+            'token' => (string) random_int(100000, 999999),
+        ]);
+
+        return back()->with(
+            'success',
+            'Token ujian berhasil dibuat.'
+        );
+    }
+
+    /**
+     * Duplikasi jadwal ujian.
+     */
+    public function duplicate(
+        ExamSchedule $examSchedule
+    ): RedirectResponse {
+
+        $newExam = $examSchedule->replicate();
+
+        $newExam->id = (string) Str::ulid();
+        $newExam->title = $examSchedule->title . ' (Copy)';
+        $newExam->token = random_int(100000, 999999);
+        $newExam->status = 'Draft';
+        $newExam->is_published = false;
+        $newExam->created_at = now();
+        $newExam->updated_at = now();
+
+        $newExam->save();
+
+        return redirect()
+            ->route('exam-schedules.edit', $newExam)
+            ->with(
+                'success',
+                'Jadwal ujian berhasil diduplikasi.'
+            );
+    }
 
     /**
      * Hapus.

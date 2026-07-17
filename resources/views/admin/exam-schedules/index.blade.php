@@ -238,6 +238,15 @@
             <span>Edit</span>
 
         </x-ui.actions.link>
+        
+        <x-ui.actions.link
+    :href="route('exam-schedules.packages.index', $item)">
+
+    <x-heroicon-o-archive-box class="h-4 w-4"/>
+
+    <span>Paket Ujian</span>
+
+</x-ui.actions.link>
 
         <x-ui.actions.button
             :action="route('exam-schedules.publish', $item)">
